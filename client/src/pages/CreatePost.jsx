@@ -15,7 +15,32 @@ const CreatePost = () => {
   });
   const [generatingImg, setGeneratingImg] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [generateImage, setGenerateImage] = useState(false);
+
+  const generateImage = async () => {
+    if (form.prompt) {
+      try {
+        setGeneratingImg(true);
+        const response = await fetch("http://localhost:8090/api/v1/dalle", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ prompt: form.prompt }),
+        });
+
+        const data = await response.json();
+
+        setForm({ ...form, photo: `data:image/jpeg;base64,${data.photo}` });
+      } catch (e) {
+        console.log(e);
+        alert(e);
+      } finally {
+        setGeneratingImg(false);
+      }
+    } else {
+      alert("Please enter a prompt");
+    }
+  };
 
   const handleSubmit = (e) => {};
 
@@ -29,7 +54,7 @@ const CreatePost = () => {
   };
 
   return (
-    <section className="max-w-7xl mx-auto">
+    <section className="max-w-7xl mx-auto ">
       <div>
         <h1 className="font-extrabold text-[#222328] text-[32px]">Create</h1>
         <p className="mt-2 text-[#666e75] text-[14px] max-w-[500px]">
@@ -60,12 +85,12 @@ const CreatePost = () => {
             handleSurpriseMe={handleSurpriseMe}
           ></FormField>
 
-          <div className="relative bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-64 p-3 h-64 flex justify-center items-center">
+          <div className="relative bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-80 p-3 h-80 flex justify-center items-center">
             {form.photo ? (
               <img
                 src={form.photo}
                 alt={form.prompt}
-                className="w-full h-full object-contain"
+                className="w-full h-full object-contain  "
               />
             ) : (
               <img
