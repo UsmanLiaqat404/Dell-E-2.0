@@ -58,8 +58,7 @@ const CreatePost = () => {
         });
 
         await response.json();
-        console.log("Post created");
-        // navigate("/");
+        navigate("/");
       } catch (e) {
         console.log(e);
         alert(e);
